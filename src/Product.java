@@ -7,10 +7,26 @@ public class Product {
 
 	private BigDecimal lastPrice = new BigDecimal(0);
 	private BigDecimal currentPrice = new BigDecimal(0);
+	private BigDecimal basePrice = new BigDecimal(0);
 	private Date lastDateChanged = new Date();
-	private Date lastRedPencilStart = null;
+	private Date lastRedPencilStart;
+	private boolean redPencilActive = false;
 	
 	
+	
+	
+	public BigDecimal getBasePrice() {
+		return basePrice;
+	}
+	public void setBasePrice(BigDecimal basePrice) {
+		this.basePrice = basePrice;
+	}
+	public boolean isRedPencilActive() {
+		return redPencilActive;
+	}
+	public void setRedPencilActive(boolean redPencilActive) {
+		this.redPencilActive = redPencilActive;
+	}
 	public Date getLastRedPencilStart() {
 		return lastRedPencilStart;
 	}
@@ -40,8 +56,8 @@ public class Product {
 	public BigDecimal getCurrentPrice() {
 		return currentPrice;
 	}
-	public void setCurrentPrice(int currentPrice) {
-		this.currentPrice = new BigDecimal(currentPrice);
+	public void setCurrentPrice(BigDecimal currentPrice) {
+		this.currentPrice = currentPrice;
 	}
 	
 	

@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -7,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 public class RedPencil {
 	
 	public static boolean checkProductEligibility(Product product){
-		if(product.getCurrentPrice().compareTo(BigDecimal.ZERO)<=0){
+		if(product.getBasePrice().compareTo(BigDecimal.ZERO)<=0){
 			return false;
 		}
 		BigDecimal decreaseDifference = (product.getLastPrice()
-				.subtract(product.getCurrentPrice()))
+				.subtract(product.getBasePrice()))
 				.divide(product.getLastPrice(), 2, RoundingMode.HALF_UP)
 				.multiply(new BigDecimal(100));
 		System.out.println(decreaseDifference+"% Change");
@@ -28,16 +29,16 @@ public class RedPencil {
 		
 		Date currentDate = new Date();
 
-				Date date2 = null;
+		Date date2 = null;
 
 		try {
-								String endDate = simpleDateFormat.format(currentDate);
+			String endDate = simpleDateFormat.format(currentDate);
 					
 			date2 = simpleDateFormat.parse(endDate);
 
 			long getDiff = date2.getTime() - product.getLastDateChanged().getTime();
 
-						long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
+			long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
 
 			System.out.println("Differance between date " + product.getLastDateChanged() + " and " + endDate + " is " + getDaysDiff + " days.");
 			if(getDaysDiff>30){
@@ -67,7 +68,7 @@ public class RedPencil {
 
 			long getDiff = date2.getTime() - product.getLastRedPencilStart().getTime();
 			long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
-			System.out.println("Differance between redpencil date " + product.getLastRedPencilStart()+ " and " + endDate + " is " + getDaysDiff + " days.");
+			System.out.println("Differance between redpencil date " + product.getLastRedPencilStart() + " and " + endDate + " is " + getDaysDiff + " days.");
 			
 			if(getDaysDiff <= 30 && getDaysDiff >=0){
 			return true;
@@ -81,5 +82,23 @@ public class RedPencil {
 		
 		return false;
 	}
+	
+	public static BigDecimal activateRedPencilEvent(Product product) {
+		BigDecimal redPencilDiscount = new BigDecimal(.05);
+		redPencilDiscount = redPencilDiscount.multiply(product.getBasePrice(), new MathContext(2));
+		product.setCurrentPrice(product.getBasePrice().subtract(redPencilDiscount));
+		product.setRedPencilActive(true);
+		return product.getCurrentPrice();
+	}
+	
+	public static boolean doesItRedPencil(Product product){
+		if(RedPencil.checkProductEligibility(product) && RedPencil.checkProductPriceStability(product)
+				&& RedPencil.checkRedPencilLength(product)){
+				RedPencil.activateRedPencilEvent(product);
+				return true;
+		}
+		return false;
+	}
+
 	
 }

@@ -1,6 +1,6 @@
 import static org.junit.Assert.*;
-
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class RedPencilTest {
 		product = new Product();
 		redPencilProduct = new Product();
 		redPencilProduct.setLastPrice(15);
-		redPencilProduct.setCurrentPrice(12);
+		redPencilProduct.setBasePrice(new BigDecimal(12));
 		redPencilProduct.setLastDateChanged("15-05-2015");
 		redPencilProduct.setLastRedPencilStart("25-01-2017");
 	}
@@ -36,6 +36,12 @@ public class RedPencilTest {
 	public void redPencilEventHasntBeenActiveForMoreThanThirtyDays(){
 		assertEquals(false, RedPencil.checkRedPencilLength(product));
 		assertEquals(true, RedPencil.checkRedPencilLength(redPencilProduct));
+	}
+	@Test
+	public void redPencilEventReducesProductCostByFivePercent(){
+		assertEquals(false, RedPencil.doesItRedPencil(product));
+		assertEquals(true, RedPencil.doesItRedPencil(redPencilProduct));
+		assertEquals(new BigDecimal(11.40).setScale(2, RoundingMode.HALF_UP), RedPencil.activateRedPencilEvent(redPencilProduct));
 	}
 	
 }
