@@ -14,14 +14,20 @@ public class RedPencilTest {
 		product = new Product();
 		redPencilProduct = new Product();
 		redPencilProduct.setLastPrice(15);
-		redPencilProduct.setCurrentPrice(10);
+		redPencilProduct.setCurrentPrice(12);
+		redPencilProduct.setLastDateChanged("15-05-2015");
 	}
 	
 	@Test
-	public void redPencilChecksThatProductIsReducedByAtLeastFivePercent() {
+	public void redPencilChecksThatProductIsReducedByAtLeastFivePercentAndLessThanThirtyPercent() {
 		assertEquals(false, RedPencil.checkProductEligibility(product));
 		assertEquals(true, RedPencil.checkProductEligibility(redPencilProduct));
 
+	}
+	@Test
+	public void redPencilChecksThatProductPriceHasBeenStableForAtLeastThirtyDays(){
+		assertEquals(false, RedPencil.checkProductPriceStability(product));
+		assertEquals(true, RedPencil.checkProductPriceStability(redPencilProduct));
 	}
 	
 }
