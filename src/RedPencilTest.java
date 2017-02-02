@@ -16,6 +16,7 @@ public class RedPencilTest {
 		redPencilProduct.setLastPrice(15);
 		redPencilProduct.setCurrentPrice(12);
 		redPencilProduct.setLastDateChanged("15-05-2015");
+		redPencilProduct.setLastRedPencilStart("25-01-2017");
 	}
 	
 	@Test
@@ -28,6 +29,13 @@ public class RedPencilTest {
 	public void redPencilChecksThatProductPriceHasBeenStableForAtLeastThirtyDays(){
 		assertEquals(false, RedPencil.checkProductPriceStability(product));
 		assertEquals(true, RedPencil.checkProductPriceStability(redPencilProduct));
+	}
+	
+	//this test will only work while 25-01-2017 is within 30 days of the actual date!
+	@Test
+	public void redPencilEventHasntBeenActiveForMoreThanThirtyDays(){
+		assertEquals(false, RedPencil.checkRedPencilLength(product));
+		assertEquals(true, RedPencil.checkRedPencilLength(redPencilProduct));
 	}
 	
 }

@@ -25,24 +25,19 @@ public class RedPencil {
 	
 	public static boolean checkProductPriceStability(Product product){
 		DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+		
 		Date currentDate = new Date();
 
-		//Date date1 = null;
-		Date date2 = null;
+				Date date2 = null;
 
 		try {
-			// calculating the difference b/w startDate and endDate
-		//	String startDate = "01-01-2016";
-			String endDate = simpleDateFormat.format(currentDate);
-		//	date1 = simpleDateFormat.parse(startDate);
-			
+								String endDate = simpleDateFormat.format(currentDate);
+					
 			date2 = simpleDateFormat.parse(endDate);
 
 			long getDiff = date2.getTime() - product.getLastDateChanged().getTime();
 
-			// using TimeUnit class from java.util.concurrent package
-			long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
+						long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
 
 			System.out.println("Differance between date " + product.getLastDateChanged() + " and " + endDate + " is " + getDaysDiff + " days.");
 			if(getDaysDiff>30){
@@ -53,6 +48,37 @@ public class RedPencil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return false;
+	}
+
+	public static boolean checkRedPencilLength(Product product) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		if (product.getLastRedPencilStart() == null){
+			return false;
+		}
+		Date currentDate = new Date();
+
+		Date date2 = null;
+
+		try {
+			String endDate = simpleDateFormat.format(currentDate);
+					
+			date2 = simpleDateFormat.parse(endDate);
+
+			long getDiff = date2.getTime() - product.getLastRedPencilStart().getTime();
+			long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
+			System.out.println("Differance between redpencil date " + product.getLastRedPencilStart()+ " and " + endDate + " is " + getDaysDiff + " days.");
+			
+			if(getDaysDiff <= 30 && getDaysDiff >=0){
+			return true;
+			}else{
+				return false;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 	

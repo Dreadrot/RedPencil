@@ -8,9 +8,19 @@ public class Product {
 	private BigDecimal lastPrice = new BigDecimal(0);
 	private BigDecimal currentPrice = new BigDecimal(0);
 	private Date lastDateChanged = new Date();
-
+	private Date lastRedPencilStart = null;
 	
 	
+	public Date getLastRedPencilStart() {
+		return lastRedPencilStart;
+	}
+	public void setLastRedPencilStart(String lastRedPencilStart) {
+		try{
+		this.lastRedPencilStart = simpleDateFormat.parse(lastRedPencilStart);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public Date getLastDateChanged() {
 		return lastDateChanged;
 	}
