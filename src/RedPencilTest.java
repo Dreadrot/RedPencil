@@ -9,6 +9,7 @@ public class RedPencilTest {
 
 	Product product;
 	Product redPencilProduct;
+	Product activeRedPencilProduct;
 	@Before
 	public void setUp(){
 		product = new Product();
@@ -17,6 +18,13 @@ public class RedPencilTest {
 		redPencilProduct.setBasePrice(new BigDecimal(12));
 		redPencilProduct.setLastDateChanged("15-05-2015");
 		redPencilProduct.setLastRedPencilStart("25-01-2017");
+		
+		activeRedPencilProduct = new Product();
+		activeRedPencilProduct.setLastPrice(15);
+		activeRedPencilProduct.setBasePrice(new BigDecimal(12));
+		activeRedPencilProduct.setLastDateChanged("15-05-2015");
+		activeRedPencilProduct.setLastRedPencilStart("25-01-2017");
+		activeRedPencilProduct.setRedPencilActive(true);
 	}
 	
 	@Test
@@ -42,6 +50,12 @@ public class RedPencilTest {
 		assertEquals(false, RedPencil.doesItRedPencil(product));
 		assertEquals(true, RedPencil.doesItRedPencil(redPencilProduct));
 		assertEquals(new BigDecimal(11.40).setScale(2, RoundingMode.HALF_UP), RedPencil.activateRedPencilEvent(redPencilProduct));
+	}
+	@Test
+	public void furtherPriceReductionsDoNotExtendRedPencilEvent(){
+		assertEquals(false, RedPencil.doesItRedPencil(product));
+		assertEquals(true, RedPencil.doesItRedPencil(redPencilProduct));
+		assertEquals(false, RedPencil.doesItRedPencil(activeRedPencilProduct));
 	}
 	
 }

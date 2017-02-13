@@ -92,11 +92,17 @@ public class RedPencil {
 	}
 	
 	public static boolean doesItRedPencil(Product product){
+		DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
 		if(RedPencil.checkProductEligibility(product) && RedPencil.checkProductPriceStability(product)
-				&& RedPencil.checkRedPencilLength(product)){
+		   && RedPencil.checkRedPencilLength(product) && product.isRedPencilActive() != true){
+			
+				product.setLastRedPencilStart(simpleDateFormat.format(new Date()));
 				RedPencil.activateRedPencilEvent(product);
+				
 				return true;
 		}
+		System.out.println("This does not match all the criteria for a red pencil event.");
 		return false;
 	}
 
