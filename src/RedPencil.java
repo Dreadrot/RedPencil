@@ -11,6 +11,7 @@ public class RedPencil {
 		if(product.getBasePrice().compareTo(BigDecimal.ZERO)<=0){
 			return false;
 		}
+		
 		BigDecimal decreaseDifference = (product.getLastPrice()
 				.subtract(product.getBasePrice()))
 				.divide(product.getLastPrice(), 2, RoundingMode.HALF_UP)
@@ -93,7 +94,12 @@ public class RedPencil {
 	
 	public static boolean doesItRedPencil(Product product){
 		DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+		
+		if(product.getLastPrice().compareTo(product.getBasePrice()) < 0){
+			product.setRedPencilActive(false);
+			return false;
+		}
+		
 		if(RedPencil.checkProductEligibility(product) && RedPencil.checkProductPriceStability(product)
 		   && RedPencil.checkRedPencilLength(product) && product.isRedPencilActive() != true){
 			
