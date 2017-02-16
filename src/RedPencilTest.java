@@ -14,14 +14,14 @@ public class RedPencilTest {
 	public void setUp(){
 		product = new Product();
 		redPencilProduct = new Product();
-		redPencilProduct.setLastPrice(15);
 		redPencilProduct.setBasePrice(new BigDecimal(12));
+		redPencilProduct.setLastPrice(new BigDecimal(15));
 		redPencilProduct.setLastDateChanged("15-05-2015");
 		redPencilProduct.setLastRedPencilStart("25-01-2017");
 		
 		activeRedPencilProduct = new Product();
-		activeRedPencilProduct.setLastPrice(15);
 		activeRedPencilProduct.setBasePrice(new BigDecimal(12));
+		activeRedPencilProduct.setLastPrice(new BigDecimal(15));
 		activeRedPencilProduct.setLastDateChanged("15-05-2015");
 		activeRedPencilProduct.setLastRedPencilStart("25-01-2017");
 		activeRedPencilProduct.setRedPencilActive(true);
@@ -66,6 +66,19 @@ public class RedPencilTest {
 		assertEquals(false, RedPencil.doesItRedPencil(activeRedPencilProduct));
 		assertEquals(false, RedPencil.doesItRedPencil(product));
 		assertEquals(true, RedPencil.doesItRedPencil(redPencilProduct));
+	}
+	
+	/*This was a feature missing from my product class, not so much my RedPencil class.
+	 * It uncovered that I needed an additional if clause to check that the last price was
+	 * greater than 0, lest I try to divide my 0.
+	 */
+	@Test
+	public void settingANewBasePriceUpdatesTheLastPriceVariable(){
+		product.setBasePrice(new BigDecimal(18));
+		product.setBasePrice(new BigDecimal(11));
+		redPencilProduct.setBasePrice(new BigDecimal(17));
+		assertEquals(new BigDecimal(18), product.getLastPrice());
+		assertEquals(new BigDecimal(12), redPencilProduct.getLastPrice());
 	}
 	
 }

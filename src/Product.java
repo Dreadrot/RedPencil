@@ -19,6 +19,7 @@ public class Product {
 		return basePrice;
 	}
 	public void setBasePrice(BigDecimal basePrice) {
+		this.setLastPrice(this.getBasePrice());
 		this.basePrice = basePrice;
 	}
 	public boolean isRedPencilActive() {
@@ -50,8 +51,8 @@ public class Product {
 	public BigDecimal getLastPrice() {
 		return lastPrice;
 	}
-	public void setLastPrice(int lastPrice) {
-		this.lastPrice = new BigDecimal(lastPrice);
+	public void setLastPrice(BigDecimal bigDecimal) {
+		this.lastPrice = bigDecimal;
 	}
 	public BigDecimal getCurrentPrice() {
 		return currentPrice;

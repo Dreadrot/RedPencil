@@ -11,7 +11,9 @@ public class RedPencil {
 		if(product.getBasePrice().compareTo(BigDecimal.ZERO)<=0){
 			return false;
 		}
-		
+		if(product.getLastPrice().compareTo(BigDecimal.ZERO)<=0){
+			return false;
+		}
 		BigDecimal decreaseDifference = (product.getLastPrice()
 				.subtract(product.getBasePrice()))
 				.divide(product.getLastPrice(), 2, RoundingMode.HALF_UP)
