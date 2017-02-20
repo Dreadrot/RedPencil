@@ -84,8 +84,10 @@ public class RedPencilTest {
 	}
 	@Test
 	public void furtherPriceReductionsEndRedPencilEventsIfTotalReductionsAreMoreThanThirtyPercent(){
+		redPencilProduct.setCurrentPrice(new BigDecimal(2));
 		assertEquals(true, RedPencil.checkAgainstOriginalPrice(product));
 		assertEquals(true, RedPencil.checkAgainstOriginalPrice(activeRedPencilProduct));
+		assertEquals(false, RedPencil.checkAgainstOriginalPrice(redPencilProduct));
 	}
-	
+
 }
