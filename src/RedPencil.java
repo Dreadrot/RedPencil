@@ -5,8 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import javax.security.auth.DestroyFailedException;
 public class RedPencil {
-	
 	public static boolean checkProductEligibility(Product product){
 		if(product.getBasePrice().compareTo(BigDecimal.ZERO)<=0){
 			return false;
@@ -76,6 +77,7 @@ public class RedPencil {
 			if(getDaysDiff <= 30 && getDaysDiff >=0){
 			return true;
 			}else{
+				
 				return false;
 			}
 			
@@ -96,23 +98,47 @@ public class RedPencil {
 	
 	public static boolean doesItRedPencil(Product product){
 		DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		
-		if(product.getLastPrice().compareTo(product.getBasePrice()) < 0){
-			product.setRedPencilActive(false);
+		if(!checkAgainstOriginalPrice(product)){
 			return false;
 		}
-		
 		if(RedPencil.checkProductEligibility(product) && RedPencil.checkProductPriceStability(product)
-		   && RedPencil.checkRedPencilLength(product) && product.isRedPencilActive() != true){
-			
+		   && RedPencil.checkRedPencilLength(product) && !product.isRedPencilActive()){
+				
 				product.setLastRedPencilStart(simpleDateFormat.format(new Date()));
 				RedPencil.activateRedPencilEvent(product);
-				
 				return true;
-		}
+				
+			}
 		System.out.println("This does not match all the criteria for a red pencil event.");
 		return false;
 	}
 
-	
+	public static boolean checkAgainstOriginalPrice(Product product){
+
+		if(!product.isRedPencilActive()){
+			product.setOriginalPrice(product.getBasePrice());
+			return true;
+		}else{
+			
+			if(product.getOriginalPrice().compareTo(new BigDecimal(0))==0){
+				product.setOriginalPrice(product.getBasePrice());
+			}
+			
+			if(product.getCurrentPrice().compareTo(new BigDecimal(0))==0){
+				product.setCurrentPrice(product.getBasePrice());
+			}
+			
+			BigDecimal decreaseDifference = (product.getOriginalPrice()
+					.subtract(product.getCurrentPrice()))
+					.divide(product.getOriginalPrice(), 2, RoundingMode.HALF_UP)
+					.multiply(new BigDecimal(100));
+			
+			System.out.println(decreaseDifference+"% Change");
+			
+			if(decreaseDifference.compareTo(new BigDecimal (30)) > 0){
+			return false;
+			}
+		return true;
+		}
+	}
 }

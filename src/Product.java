@@ -11,10 +11,16 @@ public class Product {
 	private Date lastDateChanged = new Date();
 	private Date lastRedPencilStart;
 	private boolean redPencilActive = false;
+	private BigDecimal originalPrice = new BigDecimal(0);
 	
 	
 	
-	
+	public BigDecimal getOriginalPrice() {
+		return originalPrice;
+	}
+	public void setOriginalPrice(BigDecimal originalPrice) {
+		this.originalPrice = originalPrice;
+	}
 	public BigDecimal getBasePrice() {
 		return basePrice;
 	}
