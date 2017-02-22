@@ -21,7 +21,7 @@ public class RedPencil {
 				.multiply(new BigDecimal(100));
 		System.out.println(decreaseDifference+"% Change");
 		if(decreaseDifference.compareTo(new BigDecimal (5)) > 0 && decreaseDifference.compareTo(new BigDecimal (30)) < 0){
-		return true;
+			return true;
 		}else{
 			System.out.println(decreaseDifference);
 			return false;
@@ -61,6 +61,9 @@ public class RedPencil {
 		if (product.getLastRedPencilStart() == null){
 			return false;
 		}
+		if(!product.isRedPencilActive()){
+			return true;
+		}
 		Date currentDate = new Date();
 
 		Date date2 = null;
@@ -77,14 +80,14 @@ public class RedPencil {
 			if(getDaysDiff <= 30 && getDaysDiff >=0){
 			return true;
 			}else{
-				
-				return false;
+				product.setRedPencilActive(false);
+				product.setCurrentPrice(product.getBasePrice());
+				return true;
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return false;
 	}
 	
@@ -110,37 +113,29 @@ public class RedPencil {
 		}
 		if(RedPencil.checkProductEligibility(product) && RedPencil.checkProductPriceStability(product)
 		   && RedPencil.checkRedPencilLength(product) && !product.isRedPencilActive()){
-				
+				if(product.getLastRedPencilStart() == null){
 				product.setLastRedPencilStart(simpleDateFormat.format(new Date()));
+				}
 				RedPencil.activateRedPencilEvent(product);
 				return true;
 				
 			}
 		System.out.println("This does not match all the criteria for a red pencil event.");
-		product.setRedPencilActive(false);
 		product.setCurrentPrice(product.getBasePrice());
 		return false;
 	}
 
 	public static boolean checkAgainstOriginalPrice(Product product){
-		System.out.println("Check 1: ");
 		if(product.isRedPencilActive() == false){
 			product.setOriginalPrice(product.getBasePrice());
-			System.out.println("Check 2...");
 		}
-			System.out.println(product.getBasePrice());
 			if(product.getOriginalPrice().compareTo(new BigDecimal(0))==0){
 				product.setOriginalPrice(product.getBasePrice());
-				System.out.println("Original set: " + product.getOriginalPrice());
 			}
 			
 			if(product.getCurrentPrice().compareTo(new BigDecimal(0))==0){
 				product.setCurrentPrice(product.getBasePrice());
-				System.out.println("Current set: " + product.getCurrentPrice());
 			}
-			System.out.println(product.getBasePrice() + "<-base");
-			System.out.println(product.getCurrentPrice() + "<-current");
-			System.out.println(product.getOriginalPrice() +"<-original");
 			BigDecimal decreaseDifference = (product.getOriginalPrice()
 					.subtract(product.getCurrentPrice()))
 					.divide(product.getOriginalPrice(), 2, RoundingMode.HALF_UP)
@@ -154,4 +149,5 @@ public class RedPencil {
 		
 		return true;
 	}
+
 }

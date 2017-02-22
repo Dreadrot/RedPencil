@@ -20,6 +20,7 @@ public class RedPencilTest {
 		redPencilProduct.setLastPrice(new BigDecimal(15));
 		redPencilProduct.setLastDateChanged("15-05-2015");
 		redPencilProduct.setLastRedPencilStart("25-01-2017");
+		redPencilProduct.setRedPencilActive(false);
 		
 		activeRedPencilProduct = new Product();
 		activeRedPencilProduct.setBasePrice(new BigDecimal(13));
@@ -35,12 +36,15 @@ public class RedPencilTest {
 	public void redPencilChecksThatProductIsReducedByAtLeastFivePercentAndLessThanThirtyPercent() {
 		assertEquals(false, RedPencil.checkProductEligibility(product));
 		assertEquals(true, RedPencil.checkProductEligibility(redPencilProduct));
+		assertEquals(true, RedPencil.checkProductEligibility(activeRedPencilProduct));
 
 	}
 	@Test
 	public void redPencilChecksThatProductPriceHasBeenStableForAtLeastThirtyDays(){
 		assertEquals(false, RedPencil.checkProductPriceStability(product));
 		assertEquals(true, RedPencil.checkProductPriceStability(redPencilProduct));
+		assertEquals(true, RedPencil.checkProductPriceStability(activeRedPencilProduct));
+
 	}
 	
 	//this test will only work while 25-01-2017 is within 30 days of the actual date!
@@ -48,6 +52,8 @@ public class RedPencilTest {
 	public void redPencilEventHasntBeenActiveForMoreThanThirtyDays(){
 		assertEquals(false, RedPencil.checkRedPencilLength(product));
 		assertEquals(true, RedPencil.checkRedPencilLength(redPencilProduct));
+		assertEquals(true, RedPencil.checkRedPencilLength(activeRedPencilProduct));
+
 	}
 	@Test
 	public void redPencilEventReducesProductCostByFivePercent(){
@@ -63,7 +69,6 @@ public class RedPencilTest {
 	}
 	@Test
 	public void priceIncreaseWillEndRedPencilEvent(){
-		activeRedPencilProduct.setRedPencilActive(false);
 		activeRedPencilProduct.setBasePrice(new BigDecimal(35));
 		assertEquals(false, RedPencil.doesItRedPencil(activeRedPencilProduct));
 		assertEquals(false, RedPencil.doesItRedPencil(product));
@@ -89,5 +94,23 @@ public class RedPencilTest {
 		assertEquals(true, RedPencil.checkAgainstOriginalPrice(activeRedPencilProduct));
 		assertEquals(false, RedPencil.checkAgainstOriginalPrice(redPencilProduct));
 	}
+	@Test
+	public void redPencilEventsAreRepeatable(){
+		redPencilProduct.setLastRedPencilStart("25-01-2016");
+		assertEquals(true, RedPencil.doesItRedPencil(redPencilProduct));
+		assertEquals(false, RedPencil.doesItRedPencil(product));
+		assertEquals(false, RedPencil.doesItRedPencil(activeRedPencilProduct));
 
+		Product repeatProduct = new Product();
+		repeatProduct.setBasePrice(new BigDecimal(12));
+		repeatProduct.setLastPrice(new BigDecimal(15));
+		repeatProduct.setLastDateChanged("15-05-2016");
+		repeatProduct.setLastRedPencilStart("13-01-2017");
+		repeatProduct.setRedPencilActive(false);
+		assertEquals(true, RedPencil.doesItRedPencil(repeatProduct));
+		repeatProduct.setBasePrice(new BigDecimal(11));
+		repeatProduct.setLastDateChanged("17-01-2017");
+		assertEquals(true, RedPencil.doesItRedPencil(repeatProduct));
+	}
+	
 }

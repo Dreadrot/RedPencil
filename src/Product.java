@@ -27,6 +27,7 @@ public class Product {
 	public void setBasePrice(BigDecimal basePrice) {
 		this.setLastPrice(this.getBasePrice());
 		this.basePrice = basePrice;
+		this.setLastDateChanged(new Date());
 	}
 	public boolean isRedPencilActive() {
 		return redPencilActive;
@@ -50,6 +51,13 @@ public class Product {
 	public void setLastDateChanged(String lastDateChanged) {
 		try{
 			this.lastDateChanged = simpleDateFormat.parse(lastDateChanged);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+	}
+	public void setLastDateChanged(Date lastDateChanged) {
+		try{
+			this.lastDateChanged = (lastDateChanged);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
